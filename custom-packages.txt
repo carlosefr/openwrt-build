@@ -1,0 +1,33 @@
+#
+# Extra packages to include in the custom image. Dependencies are automatically resolved.
+# OpwnWRT base packages can be excluded by adding them below, prefixed with a "-" (dash).
+#
+
+6in4
+bind-dig
+coreutils-base64
+coreutils-shuf
+curl
+diffutils
+htop
+iftop
+iperf
+kmod-fs-exfat
+kmod-fs-msdos
+kmod-fs-vfat
+kmod-usb-storage
+kmod-usb2
+kmod-usb3
+luci-app-advanced-reboot
+luci-app-sqm
+luci-ssl
+mtr
+ncat
+nping
+procps-ng-watch
+pv
+stubby
+tcpdump
+tmux
+tree
+usbutils
