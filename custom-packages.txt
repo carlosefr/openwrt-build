@@ -9,9 +9,12 @@ coreutils-base64
 coreutils-shuf
 curl
 diffutils
+dropbearconvert
 htop
 iftop
 iperf
+irqbalance
+jq
 kmod-fs-exfat
 kmod-fs-msdos
 kmod-fs-vfat
@@ -20,6 +23,7 @@ kmod-usb2
 kmod-usb3
 luci-app-advanced-reboot
 luci-app-sqm
+luci-app-wireguard
 luci-ssl
 mtr
 ncat
@@ -31,3 +35,4 @@ tcpdump
 tmux
 tree
 usbutils
+wifitoggle
