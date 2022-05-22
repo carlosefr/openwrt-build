@@ -3,16 +3,17 @@
 # OpwnWRT base packages can be excluded by adding them below, prefixed with a "-" (dash).
 #
 
-6in4
 bind-dig
 coreutils-base64
 coreutils-shuf
 curl
 diffutils
 dropbearconvert
+ethtool
 htop
 iftop
 iperf
+ipset
 irqbalance
 jq
 kmod-fs-exfat
@@ -23,7 +24,6 @@ kmod-usb2
 kmod-usb3
 luci-app-advanced-reboot
 luci-app-sqm
-luci-app-wireguard
 luci-ssl
 mtr
 ncat
