@@ -41,10 +41,15 @@ RUN apt-get -qq -y update \
 USER $BUILD_USER_ID
 WORKDIR $BUILD_ROOT
 
+#
+# Some packages embed a version in their names which changes when they break binary compatibility.
+# To avoid sticking with stale versions of those packages, and other packages that depend upon them,
+# they must be excluded from the list so they're pulled in (automatically) as dependencies instead.
+#
 RUN curl -sSL "https://downloads.openwrt.org/releases/${OPENWRT_RELEASE}/targets/${OPENWRT_TARGET}/${OPENWRT_SUBTARGET}/openwrt-imagebuilder-${OPENWRT_RELEASE}-${OPENWRT_TARGET}-${OPENWRT_SUBTARGET}.Linux-x86_64.tar.xz" \
         | tar --strip-components=1 -Jxf - \
     && curl -sSL "https://downloads.openwrt.org/releases/${OPENWRT_RELEASE}/targets/${OPENWRT_TARGET}/${OPENWRT_SUBTARGET}/openwrt-${OPENWRT_RELEASE}-${OPENWRT_TARGET}-${OPENWRT_SUBTARGET}.manifest" \
-        | awk '{print $1}' > default-packages.txt
+        | awk '{print $1}' | grep -v '^libwolfssl' > default-packages.txt
 
 COPY --chown=$BUILD_USER_ID:$BUILD_USER_ID custom-packages.txt disabled-services.txt "${BUILD_ROOT}/"
 
