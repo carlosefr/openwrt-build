@@ -26,7 +26,7 @@ build:
 	       --build-arg OPENWRT_RELEASE=$(OPENWRT_RELEASE) \
 	       .
 	mkdir -p firmware
-	docker run $(DOCKER_IMAGE) tar -c -C "bin/targets/$(OPENWRT_TARGET)/$(OPENWRT_SUBTARGET)" . | tar x -C firmware
+	docker run --rm --name openwrt-build $(DOCKER_IMAGE) tar -c -C "bin/targets/$(OPENWRT_TARGET)/$(OPENWRT_SUBTARGET)" . | tar x -C firmware
 
 .PHONY: clean
 clean:
