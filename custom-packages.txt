@@ -4,6 +4,7 @@
 #
 
 bind-dig
+conntrack
 coreutils-base64
 coreutils-shuf
 curl
@@ -12,7 +13,7 @@ dropbearconvert
 ethtool
 htop
 iftop
-iperf
+iperf3
 ipset
 irqbalance
 jq
@@ -28,6 +29,7 @@ luci-ssl
 mtr
 ncat
 nping
+procps-ng-vmstat
 procps-ng-watch
 pv
 stubby
