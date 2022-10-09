@@ -31,6 +31,7 @@ build:
 .PHONY: clean
 clean:
 	rm -rf firmware
+	docker rmi $(DOCKER_IMAGE) || true
 
 
 # EOF - Makefile
