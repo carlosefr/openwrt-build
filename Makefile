@@ -19,7 +19,8 @@ all: build
 
 .PHONY: build
 build:
-	docker build -t $(DOCKER_IMAGE) -f Dockerfile \
+	sed 's/__CACHE_BUSTER__/$(shell date +%s)/g' Dockerfile \
+	| docker build -t $(DOCKER_IMAGE) -f - \
 	       --build-arg OPENWRT_TARGET=$(OPENWRT_TARGET) \
 	       --build-arg OPENWRT_SUBTARGET=$(OPENWRT_SUBTARGET) \
 	       --build-arg OPENWRT_PROFILE=$(OPENWRT_PROFILE) \
@@ -31,7 +32,6 @@ build:
 .PHONY: clean
 clean:
 	rm -rf firmware
-	docker rmi $(DOCKER_IMAGE) || true
 
 
 # EOF - Makefile
