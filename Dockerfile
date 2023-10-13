@@ -4,7 +4,7 @@
 
 
 # SHA256 from: docker inspect --format='{{index .RepoDigests 0}}' debian:bullseye-slim
-ARG DEBIAN_BASE_IMAGE="debian@sha256:b46fc4e6813f6cbd9f3f6322c72ab974cc0e75a72ca02730a8861e98999875c7"
+ARG DEBIAN_BASE_IMAGE="debian@sha256:b55e2651b71408015f8068dd74e1d04404a8fa607dd2cfe284b4824c11f4d9bd"
 
 
 FROM $DEBIAN_BASE_IMAGE
