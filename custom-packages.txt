@@ -6,6 +6,7 @@
 bind-dig
 conntrack
 coreutils-base64
+coreutils-paste
 coreutils-shuf
 curl
 diffutils
@@ -15,7 +16,6 @@ htop
 iftop
 iperf3
 ipset
-irqbalance
 jq
 kmod-fs-exfat
 kmod-fs-msdos
