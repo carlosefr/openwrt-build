@@ -3,8 +3,8 @@
 #
 
 
-# SHA256 from: docker inspect --format='{{index .RepoDigests 0}}' debian:bullseye-slim
-ARG DEBIAN_BASE_IMAGE="debian@sha256:b55e2651b71408015f8068dd74e1d04404a8fa607dd2cfe284b4824c11f4d9bd"
+# SHA256 from: docker inspect --format='{{index .RepoDigests 0}}' debian:bookworm-slim
+ARG DEBIAN_BASE_IMAGE="debian@sha256:d365f4920711a9074c4bcd178e8f457ee59250426441ab2a5f8106ed8fe948eb"
 
 
 FROM $DEBIAN_BASE_IMAGE
@@ -20,6 +20,18 @@ ARG OPENWRT_RELEASE
 
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
+# The OpenWRT image builder terminates with a segmentation fault under Rosetta, but works fine under QEMU.
+# I'm not aware of any CLI parameter to force the use of QEMU. The only option seems to be through the GUI.
+RUN if grep -q '[r]osetta' /proc/[1-9]*/cmdline; then \
+        echo -ne '\n##' \
+                 '\n## The OpenWRT image builder does not work properly under Apple Rosetta x86-64 emulation.' \
+                 '\n##' \
+                 '\n## Please (temporarily) uncheck "Use Rosetta for x86_64/amd64 emulation on Apple Silicon"' \
+                 '\n## in the Docker Desktop "General / Virtual Machine Options" section to use QEMU instead.' \
+                 '\n##\n\n' >&2; \
+        exit 1; \
+    fi
+
 RUN useradd -m -d "$BUILD_ROOT" -s /bin/false -U "$BUILD_USER" -u "$BUILD_USER_ID"
 
 RUN apt-get -qq -y update \
@@ -32,6 +44,7 @@ RUN apt-get -qq -y update \
         unzip \
         wget \
         python3 \
+        python3-distutils \
         git \
         file \
         rsync \
@@ -55,11 +68,11 @@ COPY --chown=$BUILD_USER_ID:$BUILD_USER_ID custom-packages.txt disabled-services
 # they must be excluded from the list so they're pulled in (automatically) as dependencies instead.
 #
 RUN curl -sSL "https://downloads.openwrt.org/releases/${OPENWRT_RELEASE}/targets/${OPENWRT_TARGET}/${OPENWRT_SUBTARGET}/openwrt-${OPENWRT_RELEASE}-${OPENWRT_TARGET}-${OPENWRT_SUBTARGET}.manifest" \
-        | awk '{print $1}' | grep -v '^libwolfssl' > default-packages.txt \
+       | awk '{print $1}' | grep -v '^libwolfssl' > default-packages.txt \
     && make image PROFILE="$OPENWRT_PROFILE" \
-               PACKAGES="$(cat default-packages.txt custom-packages.txt | sed 's/#.*//g; s/ *//g' | sort -u | xargs)" \
-               DISABLED_SERVICES="$(cat disabled-services.txt | sed 's/#.*//' | xargs)" \
-               EXTRA_IMAGE_NAME="custom"
+                  PACKAGES="$(cat default-packages.txt custom-packages.txt | sed 's/#.*//g; s/ *//g' | sort -u | xargs)" \
+                  DISABLED_SERVICES="$(cat disabled-services.txt | sed 's/#.*//' | xargs)" \
+                  EXTRA_IMAGE_NAME="custom"
 
 
 # EOF - Dockerfile
