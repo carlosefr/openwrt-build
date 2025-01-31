@@ -4,7 +4,7 @@
 
 
 # SHA256 from: docker inspect --format='{{index .RepoDigests 0}}' debian:bookworm-slim
-ARG DEBIAN_BASE_IMAGE="debian@sha256:d365f4920711a9074c4bcd178e8f457ee59250426441ab2a5f8106ed8fe948eb"
+ARG DEBIAN_BASE_IMAGE="debian@sha256:f70dc8d6a8b6a06824c92471a1a258030836b26b043881358b967bf73de7c5ab"
 
 
 FROM $DEBIAN_BASE_IMAGE
