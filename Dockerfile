@@ -12,6 +12,7 @@ FROM $DEBIAN_BASE_IMAGE
 ARG BUILD_ROOT="/var/openwrt-build"
 ARG BUILD_USER="openwrt"
 ARG BUILD_USER_ID=1143
+ARG BUILD_TAG="custom"
 
 ARG OPENWRT_TARGET
 ARG OPENWRT_SUBTARGET
@@ -67,12 +68,15 @@ COPY --chown=$BUILD_USER_ID:$BUILD_USER_ID custom-packages.txt disabled-services
 # To avoid sticking with stale versions of those packages, and other packages that depend upon them,
 # they must be excluded from the list so they're pulled in (automatically) as dependencies instead.
 #
-RUN curl -sSL "https://downloads.openwrt.org/releases/${OPENWRT_RELEASE}/targets/${OPENWRT_TARGET}/${OPENWRT_SUBTARGET}/openwrt-${OPENWRT_RELEASE}-${OPENWRT_TARGET}-${OPENWRT_SUBTARGET}.manifest" \
-       | awk '{print $1}' | grep -v '^libwolfssl' > default-packages.txt \
+RUN UPSTREAM_MANIFEST="${PWD}/openwrt-${OPENWRT_RELEASE}-${OPENWRT_TARGET}-${OPENWRT_SUBTARGET}-${OPENWRT_PROFILE}.manifest" \
+    && CUSTOM_MANIFEST="${PWD}/bin/targets/${OPENWRT_TARGET}/${OPENWRT_SUBTARGET}/openwrt-${OPENWRT_RELEASE}-${BUILD_TAG}-${OPENWRT_TARGET}-${OPENWRT_SUBTARGET}-${OPENWRT_PROFILE}.manifest" \
+    && curl -o "$UPSTREAM_MANIFEST" -sSL "https://downloads.openwrt.org/releases/${OPENWRT_RELEASE}/targets/${OPENWRT_TARGET}/${OPENWRT_SUBTARGET}/openwrt-${OPENWRT_RELEASE}-${OPENWRT_TARGET}-${OPENWRT_SUBTARGET}.manifest" \
+    && awk '{print $1}' "$UPSTREAM_MANIFEST" | grep -vP '^lib(wolfssl|usb|.+[^0-9]20[0-9]{2}[01][0-9][0-3][0-9]$)' > default-packages.txt \
     && make image PROFILE="$OPENWRT_PROFILE" \
                   PACKAGES="$(cat default-packages.txt custom-packages.txt | sed 's/#.*//g; s/ *//g' | sort -u | xargs)" \
                   DISABLED_SERVICES="$(cat disabled-services.txt | sed 's/#.*//' | xargs)" \
-                  EXTRA_IMAGE_NAME="custom"
+                  EXTRA_IMAGE_NAME="$BUILD_TAG" \
+    && diff -u "$UPSTREAM_MANIFEST" "$CUSTOM_MANIFEST" > "${CUSTOM_MANIFEST}.diff" || true
 
 
 # EOF - Dockerfile
