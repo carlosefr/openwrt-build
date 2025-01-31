@@ -76,7 +76,7 @@ RUN UPSTREAM_MANIFEST="${PWD}/openwrt-${OPENWRT_RELEASE}-${OPENWRT_TARGET}-${OPE
                   PACKAGES="$(cat default-packages.txt custom-packages.txt | sed 's/#.*//g; s/ *//g' | sort -u | xargs)" \
                   DISABLED_SERVICES="$(cat disabled-services.txt | sed 's/#.*//' | xargs)" \
                   EXTRA_IMAGE_NAME="$BUILD_TAG" \
-    && diff -u "$UPSTREAM_MANIFEST" "$CUSTOM_MANIFEST" > "${CUSTOM_MANIFEST}.diff" || true
+    && diff -u <(sort "$UPSTREAM_MANIFEST") <(sort "$CUSTOM_MANIFEST") > "${CUSTOM_MANIFEST}.diff" || true
 
 
 # EOF - Dockerfile
