@@ -71,7 +71,7 @@ COPY --chown=$BUILD_USER_ID:$BUILD_USER_ID custom-packages.txt disabled-services
 RUN UPSTREAM_MANIFEST="${PWD}/openwrt-${OPENWRT_RELEASE}-${OPENWRT_TARGET}-${OPENWRT_SUBTARGET}-${OPENWRT_PROFILE}.manifest" \
     && CUSTOM_MANIFEST="${PWD}/bin/targets/${OPENWRT_TARGET}/${OPENWRT_SUBTARGET}/openwrt-${OPENWRT_RELEASE}-${BUILD_TAG}-${OPENWRT_TARGET}-${OPENWRT_SUBTARGET}-${OPENWRT_PROFILE}.manifest" \
     && curl -o "$UPSTREAM_MANIFEST" -sSL "https://downloads.openwrt.org/releases/${OPENWRT_RELEASE}/targets/${OPENWRT_TARGET}/${OPENWRT_SUBTARGET}/openwrt-${OPENWRT_RELEASE}-${OPENWRT_TARGET}-${OPENWRT_SUBTARGET}.manifest" \
-    && awk '{print $1}' "$UPSTREAM_MANIFEST" | grep -vP '^lib(wolfssl|usb|.+[^0-9]20[0-9]{2}[01][0-9][0-3][0-9]$)' > default-packages.txt \
+    && awk '{print $1}' "$UPSTREAM_MANIFEST" | grep -vP '^lib.*[^0-9]20[0-9]{2}[01][0-9][0-3][0-9]$' > default-packages.txt \
     && make image PROFILE="$OPENWRT_PROFILE" \
                   PACKAGES="$(cat default-packages.txt custom-packages.txt | sed 's/#.*//g; s/ *//g' | sort -u | xargs)" \
                   DISABLED_SERVICES="$(cat disabled-services.txt | sed 's/#.*//' | xargs)" \
