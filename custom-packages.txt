@@ -15,11 +15,13 @@ htop
 iftop
 iperf3
 ipset
+iptables-mod-u32
 irqbalance
 jq
 kmod-fs-exfat
 kmod-fs-msdos
 kmod-fs-vfat
+kmod-ipt-u32
 kmod-usb-storage
 kmod-usb2
 kmod-usb3
@@ -36,5 +38,7 @@ stubby
 tcpdump
 tmux
 tree
+unbound-control
+unbound-daemon
 usbutils
 wifitoggle
